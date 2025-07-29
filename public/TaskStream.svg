@@ -1,0 +1,42 @@
+<svg viewBox="0 0 380 100" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Simple gradient -->
+    <linearGradient id="brandGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#4F46E5"/>
+      <stop offset="100%" style="stop-color:#06B6D4"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Minimalist icon -->
+  <g transform="translate(20, 30)">
+    <!-- Clean stream line -->
+    <path d="M0 20 Q15 5 30 20 T60 20" 
+          stroke="url(#brandGradient)" 
+          stroke-width="3" 
+          fill="none" 
+          stroke-linecap="round"/>
+    
+    <!-- Simple task nodes -->
+    <circle cx="0" cy="20" r="4" fill="#4F46E5"/>
+    <circle cx="30" cy="20" r="3" fill="#7C3AED"/>
+    <circle cx="60" cy="20" r="4" fill="#06B6D4"/>
+    
+    <!-- Minimal insight indicator -->
+    <g transform="translate(70, 8)">
+      <rect x="0" y="16" width="2" height="4" fill="#4F46E5" opacity="0.6"/>
+      <rect x="3" y="12" width="2" height="8" fill="#7C3AED" opacity="0.6"/>
+      <rect x="6" y="14" width="2" height="6" fill="#06B6D4" opacity="0.6"/>
+    </g>
+  </g>
+  
+  <!-- Clean typography -->
+  <text x="120" y="45" 
+        font-family="system-ui, -apple-system, sans-serif" 
+        font-size="24" 
+        font-weight="600" 
+        fill="#1F2937">
+    Task<tspan fill="url(#brandGradient)">Stream</tspan>
+  </text>
+  
+
+</svg>

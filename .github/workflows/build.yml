@@ -3,7 +3,7 @@ run-name : running "npm build"
 on :
   push :
     branches :
-      - Production
+      - main
 jobs: 
   build :
     runs-on : ubuntu-latest
