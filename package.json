@@ -10,6 +10,7 @@
     "prepare": "echo 'Husky is ready (manual hooks used in v9+)'"
   },
   "dependencies": {
+    "axios": "^1.11.0",
     "next": "15.4.4",
     "react": "19.1.0",
     "react-dom": "19.1.0"
