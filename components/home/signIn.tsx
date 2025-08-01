@@ -1,7 +1,12 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useRouter } from "next/navigation";
+import { useAuthStore } from "@/store/auth";
 
 export default function SignIn () {
+    const router = useRouter()
+
+    const setToken = useAuthStore((state) => state.setToken)
     const [password, setPassword] = useState("")
     const [email, setEmail] = useState("")
     const [resMsg, setResMsg] = useState("")
@@ -12,6 +17,10 @@ export default function SignIn () {
         try {
             const res = await axios.post('http://127.0.0.1:5000/signin',{ email,password })
             console.log(res.data)
+            if (res.status == 200){
+                setToken(res.data.refresh_token)
+                router.push('/dashboard')
+            }
             setResMsg("SignIn Successful")
             setPop(true)
         }catch (error : unknown){
