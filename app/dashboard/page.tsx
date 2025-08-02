@@ -1,28 +1,22 @@
-'use client'
+"use client";
 
-import ProtectedRoute from "@/components/protectRoute";
-import SignOut from "@/components/signOut";
 import { useAuthStore } from "@/store/auth";
+import ProtectedRoute from "@/components/protectedRoute";
 import React from "react";
+import SignOut from "@/components/signOut";
 
-export default function Dashboard () {
-    const token = useAuthStore((state) => state.token);
-    console.log(token)
-    
-    if (token != null){
-        
-        return(
-        <section>
-                <h1>Unauthorized</h1>
-        </section>
-    )
-return(
-            <section>
-                <h1>Dashboard</h1>
-            </section>
-        )
-    }
-    
+export default function Dashboard() {
+  const token = useAuthStore((state) => state.token);
+  const user = useAuthStore((state) => state.user);
+  console.log(token);
 
-
+  return (
+    <ProtectedRoute>
+      <div className="p-6">
+        <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
+        <p>Welcome! User ID: {user}</p>
+        <SignOut/>
+      </div>
+    </ProtectedRoute>
+  );
 }
