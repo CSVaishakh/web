@@ -1,19 +1,11 @@
 'use client'
 
-import React, { useState } from "react";
-import Image from "next/image";
-import Link from "next/link";
+import React,{useState} from "react";
 import axios from "axios";
 import { useAuthStore } from "@/store/auth";
 import { useRouter } from "next/navigation";
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-} from "@/components/ui/dropdown-menu"
 
-export default function Header () {
+export default function SignOut () {
     const token = useAuthStore((state)=>state.token)
     const router = useRouter()
     const [msg, setMsg] = useState("")
@@ -22,12 +14,14 @@ export default function Header () {
     async function handleSignOut () {
         try{
             const res = await axios.post('http://127.0.0.1:5000/signout',null,{headers : { Authorization : `Bearer ${token}`}})
-            if (res.status == 200){}
+            if (res.status == 200){
+                useAuthStore.getState().clearToken()
                 setMsg("SignOut Successful")
                 setPop(true)
                 setTimeout(()=>{
                     router.push('/')
                 })
+            }
         }
         catch(error){
             if(axios.isAxiosError(error)){
@@ -40,19 +34,9 @@ export default function Header () {
             setPop(false)
         },3000)
     }
-
     return(
         <section>
-            <Image src={'TaskSteam.svg'} alt="" height={20} width={20}/>
-            <nav>
-                <DropdownMenu>
-                    <DropdownMenuTrigger>Open</DropdownMenuTrigger>
-                    <DropdownMenuContent>
-
-                    </DropdownMenuContent>
-                </DropdownMenu>
-                <button onClick={handleSignOut}>SignOut</button>
-            </nav>
+            <button onClick={handleSignOut}>SignOut</button>
             {pop && (
                 <div>
                     {msg}
