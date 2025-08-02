@@ -17,15 +17,20 @@ export default function SignIn () {
         try {
             const res = await axios.post('http://127.0.0.1:5000/signin',{ email,password })
             console.log(res.data)
-            if (res.status == 200){
+            if (res.status == 200 && res.data.refresh_token){
                 setToken(res.data.refresh_token)
-                router.push('/dashboard')
+                setResMsg("SignIn Successful")
+                setPop(true)
+                setTimeout(() => {
+                    router.push('/dashboard')
+                }, 1000)
+            } else {
+                setResMsg("SignIn failed - no token received")
+                setPop(true)
             }
-            setResMsg("SignIn Successful")
-            setPop(true)
         }catch (error : unknown){
             if(axios.isAxiosError(error)){
-                setResMsg(error.message)
+                setResMsg(error.response?.data?.message || error.message)
                 setPop(true)
             }
         }
