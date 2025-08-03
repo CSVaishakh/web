@@ -10,7 +10,9 @@ interface ProtectedRouteProps {
 }
 
 export default function ProtectedRoute({ children }: ProtectedRouteProps) {
-  const { token, setUser, logout } = useAuthStore();
+  const token = useAuthStore((state) => state.token);
+  const setUser = useAuthStore((state) => state.setUser);
+  const logout = useAuthStore((state) => state.logout);
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [isVerified, setIsVerified] = useState(false);
@@ -24,7 +26,7 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
       }
 
       try {
-        const response = await axios.get('http://localhost:5000/verify', {
+        const response = await axios.get('http://127.0.0.1:5000/verify', {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',
