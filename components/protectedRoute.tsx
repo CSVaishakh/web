@@ -3,6 +3,7 @@
 import { useAuthStore } from "@/store/auth";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import axios from "axios";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -23,16 +24,15 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
       }
 
       try {
-        const response = await fetch('http://localhost:5000/verify', {
-          method: 'GET',
+        const response = await axios.get('http://localhost:5000/verify', {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',
           },
         });
 
-        if (response.ok) {
-          const data = await response.json();
+        if (response.status === 200) {
+          const data = response.data;
           if (data.userid) {
             setUser(data.userid);
             setIsVerified(true);
