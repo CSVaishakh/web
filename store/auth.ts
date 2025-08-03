@@ -1,14 +1,6 @@
 import { create } from 'zustand'
 import { devtools, persist } from 'zustand/middleware'
-
-    type AuthState = {
-        token : string | null
-        user : string | null
-        setToken : (token : string) => void
-        setUser : (user : string) => void
-        clearToken : () => void
-        logout : () => void
-    }
+import { AuthState } from '@/types/types'
 
 export const useAuthStore = create<AuthState>() (
     devtools(

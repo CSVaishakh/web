@@ -26,7 +26,6 @@ export default function SignOut () {
         catch(error){
             if(axios.isAxiosError(error)){
                 setMsg(error.message)
-                console.log(token)
                 setPop(true)
             }
         }
