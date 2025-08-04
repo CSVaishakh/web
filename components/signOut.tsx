@@ -35,9 +35,9 @@ export default function SignOut () {
     }
     return(
         <section>
-            <button onClick={handleSignOut}>SignOut</button>
+            <button className="px-6 py-3 bg-red-500 text-white border-none rounded-lg font-semibold cursor-pointer transition-all duration-200 hover:bg-red-600 hover:-translate-y-0.5 hover:shadow-lg" onClick={handleSignOut}>SignOut</button>
             {pop && (
-                <div>
+                <div className="fixed top-4 right-4 p-4 rounded-lg shadow-lg z-50 font-medium bg-blue-50 border-2 border-blue-500 text-blue-800">
                     {msg}
                 </div>
             )}
