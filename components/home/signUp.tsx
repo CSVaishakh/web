@@ -5,7 +5,7 @@ export default function SignUp () {
     const [name, setName] = useState("")
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
-    const [roleCode,setRoleCode] = useState("")
+    const [roleCode] = useState(null)
     const [resMsg, setResMsg] = useState("")
     const [pop, setPop] = useState(false)
     const [isSuccess, setIsSuccess] = useState(false)
@@ -65,14 +65,6 @@ export default function SignUp () {
                     placeholder="Password" 
                     value={password} 
                     onChange={e => setPassword(e.target.value)}
-                    required
-                />
-                <input 
-                    className="p-4 border-2 border-slate-200 rounded-lg text-base transition-all duration-200 bg-gray-50 focus:outline-none focus:border-blue-500 focus:bg-white focus:shadow-[0_0_0_3px_rgba(59,130,246,0.1)] placeholder:text-slate-400" 
-                    type="text" 
-                    placeholder="Role Code" 
-                    value={roleCode} 
-                    onChange={e => setRoleCode(e.target.value)}
                     required
                 />
                 <button className="p-4 bg-blue-500 text-white border-none rounded-lg text-base font-semibold cursor-pointer transition-all duration-200 hover:bg-blue-700 hover:-translate-y-0.5 hover:shadow-[0_4px_8px_rgba(59,130,246,0.3)] active:translate-y-0" type="submit">SignUp</button>
