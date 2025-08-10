@@ -4,17 +4,14 @@ import React, { useState } from "react";
 import Image from "next/image";
 import SignUp from "@/components/home/signUp";
 import SignIn from "@/components/home/signIn";
+import AdminSignUp from "@/components/home/adminSignUp";
 
 export default function Home() {
-  const [signUp, setSignUp] = useState(true)
-  
-  const handleSignUp = () => {
-    setSignUp(true)
-  }
+  const [view, setView] = useState<'signup' | 'signin'>('signup')
+  const [signupType, setSignupType] = useState<'user' | 'admin'>('user')
 
-    const handleSignIn = () => {
-    setSignUp(false)
-  }
+  const handleSignUp = () => setView('signup')
+  const handleSignIn = () => setView('signin')
 
   return (
     <div className="min-h-screen flex items-center justify-center p-8 bg-gradient-to-br from-blue-50 via-white to-blue-100">
@@ -22,7 +19,7 @@ export default function Home() {
         <div className="flex flex-col justify-center p-8 order-2 lg:order-1">
           <div className="text-center lg:text-left">
             <div className="mb-6 flex justify-center lg:justify-start">
-              <Image src={'TaskStream.svg'} alt="TaskStream Logo" height={800} width={800}/>
+              <Image src={'/TaskStream.svg'} alt="TaskStream Logo" height={800} width={800}/>
             </div>
             <p className="text-slate-600 text-xl leading-relaxed max-w-md mx-auto lg:mx-0">A Single platform for Streamlining Tasks, Optimizing Management & Gathering Insights</p>
           </div>
@@ -31,13 +28,45 @@ export default function Home() {
         <div className="flex justify-center items-center order-1 lg:order-2">
           <div className="w-full max-w-md">
             <div className="flex gap-4 justify-center mb-8">
-                <button className={`px-10 py-4 border-2 cursor-pointer rounded-xl font-semibold text-base transition-all duration-300 min-w-[140px] shadow-sm ${signUp ? 'bg-blue-600 text-white border-blue-600 shadow-blue-600/25 -translate-y-0.5' : 'bg-white text-slate-700 border-slate-200 hover:bg-blue-50 hover:text-blue-600 hover:border-blue-300 hover:-translate-y-0.5'}`} onClick={handleSignUp}>SignUp</button>
-                <button className={`px-10 py-4 border-2 cursor-pointer rounded-xl font-semibold text-base transition-all duration-300 min-w-[140px] shadow-sm ${!signUp ? 'bg-blue-600 text-white border-blue-600 shadow-blue-600/25 -translate-y-0.5' : 'bg-white text-slate-700 border-slate-200 hover:bg-blue-50 hover:text-blue-600 hover:border-blue-300 hover:-translate-y-0.5'}`} onClick={handleSignIn}>SignIn</button>
+              <button
+                className={`px-10 py-4 border-2 cursor-pointer rounded-xl font-semibold text-base transition-all duration-300 min-w-[140px] shadow-sm ${view === 'signup' ? 'bg-blue-600 text-white border-blue-600 shadow-blue-600/25 -translate-y-0.5' : 'bg-white text-slate-700 border-slate-200 hover:bg-blue-50 hover:text-blue-600 hover:border-blue-300 hover:-translate-y-0.5'}`}
+                onClick={handleSignUp}
+              >
+                SignUp
+              </button>
+              <button
+                className={`px-10 py-4 border-2 cursor-pointer rounded-xl font-semibold text-base transition-all duration-300 min-w-[140px] shadow-sm ${view === 'signin' ? 'bg-blue-600 text-white border-blue-600 shadow-blue-600/25 -translate-y-0.5' : 'bg-white text-slate-700 border-slate-200 hover:bg-blue-50 hover:text-blue-600 hover:border-blue-300 hover:-translate-y-0.5'}`}
+                onClick={handleSignIn}
+              >
+                SignIn
+              </button>
             </div>
             <div className="bg-white rounded-2xl p-10 shadow-xl border border-slate-200 min-w-[400px]">
-              <h3 className="text-slate-800 mb-6 text-center text-2xl font-semibold">{signUp ? "Create Account" : "Welcome Back"}</h3>
+              <h3 className="text-slate-800 mb-6 text-center text-2xl font-semibold">
+                {view === 'signup' && 'Create Account'}
+                {view === 'signin' && 'Welcome Back'}
+              </h3>
+              {view === 'signup' && (
+                <div className="flex justify-center mb-6 gap-2">
+                  <button
+                    className={`px-6 py-2 border-2 cursor-pointer rounded-lg font-medium text-sm transition-all duration-200 shadow-sm ${signupType === 'admin' ? 'bg-blue-600 text-white border-blue-600 shadow-blue-600/25 -translate-y-0.5' : 'bg-white text-slate-700 border-slate-200 hover:bg-blue-50 hover:text-blue-600 hover:border-blue-300 hover:-translate-y-0.5'}`}
+                    onClick={() => setSignupType('admin')}
+                    type="button"
+                  >
+                    Admin
+                  </button>
+                  <button
+                    className={`px-6 py-2 border-2 cursor-pointer rounded-lg font-medium text-sm transition-all duration-200 shadow-sm ${signupType === 'user' ? 'bg-blue-600 text-white border-blue-600 shadow-blue-600/25 -translate-y-0.5' : 'bg-white text-slate-700 border-slate-200 hover:bg-blue-50 hover:text-blue-600 hover:border-blue-300 hover:-translate-y-0.5'}`}
+                    onClick={() => setSignupType('user')}
+                    type="button"
+                  >
+                    User
+                  </button>
+                </div>
+              )}
               <div>
-                {signUp ? <SignUp/> : <SignIn/>}
+                {view === 'signup' && (signupType === 'user' ? <SignUp /> : <AdminSignUp />)}
+                {view === 'signin' && <SignIn />}
               </div>
             </div>
           </div>

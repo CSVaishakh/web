@@ -14,6 +14,13 @@ export type AuthState = {
     logout : () => void
 }
 
+export interface Credentials {
+    Email : string
+    Password : string
+    Role : string
+    Name : string
+    License : string
+}
 
 export interface Profile {
     userid : string 
