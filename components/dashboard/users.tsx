@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Profile } from "@/types/types";
 import AssignRoleTable from "./assignRole";
+import UsersGrid from "./usersGrid";
 
 export default function Users () {
     const [managers, setManagers] = useState<Profile []>([])
@@ -11,57 +12,49 @@ export default function Users () {
     const token = useAuthStore((state) => state.token)
     useEffect(() => {
         if (!token) return
-        let cancelled = false
         async function fetchData () {
             try {
                 const res = await axios.get("http://localhost:5005/admin",{ params: { token }})
-                if (cancelled) return
                 setAssociates(res.data.req_data[0])
                 setManagers(res.data.req_data[1])
                 setUsers(res.data.req_data[2])
             } catch (err) {
-                console.error("Failed to load users:", err)
+                if (axios.isAxiosError(err)) {
+                    console.log(err.message)
+                }
             }
         }
         fetchData()
-        return () => { cancelled = true }
     }, [token])
 
     return(
-        <section>
+        <section className="space-y-8 p-6">
             <div>
-                <h1>Dashboard</h1>
-                <div>
-                    <h3>Managers</h3>
-                    <ul>
-                        {managers.map(manager => (
-                            <li key={manager.userid}>
-                                <div>
-                                    <h5>{manager.name}</h5>
-                                    <p>{manager.userid}</p>
-                                    <p>{manager.email}</p>
-                                </div>
-                            </li>
-                        ))}
-                    </ul>
+                <h1 className="text-2xl font-bold text-gray-900 mb-8">Dashboard</h1>
+                
+                {/* Managers Section */}
+                <div className="mb-8">
+                    <UsersGrid 
+                        title="Managers" 
+                        users={managers} 
+                        showRole={true}
+                        className="mb-6"
+                    />
                 </div>
-                <div>
-                    <h3>Associates</h3>
-                    <ul>
-                        {associates.map(associate => (
-                            <li key={associate.userid}>
-                                <div>
-                                    <h5>{associate.name}</h5>
-                                    <p>{associate.userid}</p>
-                                    <p>{associate.email}</p>
-                                </div>
-                            </li>
-                        ))}
-                    </ul>
+
+                {/* Associates Section */}
+                <div className="mb-8">
+                    <UsersGrid 
+                        title="Associates" 
+                        users={associates} 
+                        showRole={true}
+                        className="mb-6"
+                    />
                 </div>
-                <div>
-                    <h3>Assign Roles</h3>
-                    <AssignRoleTable users={ users }/>
+
+                {/* Assign Roles Section */}
+                <div className="border-t pt-8">
+                    <AssignRoleTable users={users}/>
                 </div>
             </div>
         </section>

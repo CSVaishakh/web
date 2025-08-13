@@ -5,13 +5,11 @@ import axios from "axios"
 import { useAuthStore } from "@/store/auth"
 import type { Profile } from "@/types/types"
 
-type RoleOption = "Admin" | "Managers" | "Associate"
+type RoleOption = "Admin" | "Manager" | "Associate"
 
-// Map display roles to values expected by API if they differ. Adjust if your API uses codes.
-const ROLE_OPTIONS: RoleOption[] = ["Admin", "Managers", "Associate"]
+const ROLE_OPTIONS: RoleOption[] = ["Admin", "Manager", "Associate"]
 
 interface AssignRoleTableProps {
-	// Users without role (or with missing role) will be passed in
 	users?: Profile[]
 }
 
@@ -20,7 +18,6 @@ export default function AssignRoleTable({ users = [] }: AssignRoleTableProps) {
 	const [pendingRole, setPendingRole] = useState<Record<string, RoleOption>>({})
 	const [rowBusy, setRowBusy] = useState<Record<string, boolean>>({})
 
-	// Initialize selection – default to Associate when role missing
 	useEffect(() => {
 		const initial: Record<string, RoleOption> = {}
 		for (const u of users) initial[u.userid] = normalizeRole(u.role)
@@ -32,7 +29,7 @@ export default function AssignRoleTable({ users = [] }: AssignRoleTableProps) {
 	function normalizeRole(role: string | null | undefined): RoleOption {
 		const r = (role || "").toLowerCase()
 		if (r.startsWith("admin")) return "Admin"
-		if (r.startsWith("manager")) return "Managers"
+		if (r.startsWith("manager")) return "Manager"
 				return "Associate"
 	}
 
@@ -42,10 +39,9 @@ export default function AssignRoleTable({ users = [] }: AssignRoleTableProps) {
 		if (!newRole) return
 		setRowBusy((b) => ({ ...b, [user.userid]: true }))
 		try {
-			// Use Next.js rewrite proxy and send token via Authorization header
 			await axios.patch(
-				"/api/admin",
-				{ userid: user.userid, role: newRole },
+				`http://localhost:5005/admin?userId=${user.userid}&role=${newRole}`,
+				{},
 				{ headers: { Authorization: `Bearer ${token}` } }
 			)
 	} catch (e: unknown) {
