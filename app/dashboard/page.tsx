@@ -5,6 +5,7 @@ import ProtectedRoute from "@/components/protectedRoute";
 import React from "react";
 import SignOut from "@/components/signOut";
 import Link from "next/link";
+import Users from "@/components/dashboard/users";
 
 export default function Dashboard() {
   const token = useAuthStore((state) => state.token);
@@ -24,6 +25,7 @@ export default function Dashboard() {
                 <Link href={'/dashboard/profile'}>Profile</Link>
               </button>
             </div>
+            <Users/>
           </div>
         </div>
       </div>
