@@ -1,5 +1,5 @@
 import { useAuthStore } from "@/store/auth";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 import { Profile } from "@/types/types";
 import AssignRoleTable from "./assignRole";
@@ -10,7 +10,8 @@ export default function Users () {
     const [associates, setAssociates] = useState<Profile []>([])
     const [users,setUsers] = useState<Profile []>([])
     const token = useAuthStore((state) => state.token)
-    useEffect(() => {
+
+    const fetchData = useCallback (async () => {
         if (!token) return
         async function fetchData () {
             try {
@@ -25,12 +26,23 @@ export default function Users () {
             }
         }
         fetchData()
-    }, [token])
+    },[token])
+    useEffect(() => {
+        fetchData()
+    }, [fetchData])
 
     return(
         <section className="space-y-8 p-6">
             <div>
-                <h1 className="text-2xl font-bold text-gray-900 mb-8">Dashboard</h1>
+                <div className="flex items-center justify-between mb-8">
+                    <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
+                    <button
+                        onClick={fetchData}
+                        className="px-4 py-2 bg-blue-600 text-white rounded shadow hover:bg-blue-700 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2"
+                    >
+                        Refresh
+                    </button>
+                </div>
                 
                 {/* Managers Section */}
                 <div className="mb-8">
