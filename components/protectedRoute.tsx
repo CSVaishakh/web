@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import { useAuthStore } from "@/store/auth";
 import { useRouter } from "next/navigation";
@@ -14,51 +14,60 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
   const setUser = useAuthStore((state) => state.setUser);
   const logout = useAuthStore((state) => state.logout);
   const router = useRouter();
+
+  // null = checking, true = verified, false = failed
+  const [isVerified, setIsVerified] = useState<boolean | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [isVerified, setIsVerified] = useState(false);
 
   useEffect(() => {
-    const verifyToken = async () => {
-      if (!token) {
-        setError('No authentication token found');
-        setTimeout(() => router.push('/'), 2000);
-        return;
-      }
+    // Wait for token to exist before checking
+    if (!token) return;
 
+    const verifyToken = async () => {
       try {
-        const response = await axios.get('http://127.0.0.1:5000/verify', {
+        const response = await axios.get("http://127.0.0.1:5000/verify", {
           headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
           },
         });
 
-        if (response.status === 200) {
-          const data = response.data;
-          if (data.userid) {
-            setUser(data.userid);
-            setIsVerified(true);
-          } else {
-            setError('Invalid authentication response');
-            logout();
-            setTimeout(() => router.push('/'), 2000);
-          }
+        if (response.status === 200 && response.data.userid) {
+          setUser(response.data.userid);
+          setIsVerified(true);
         } else {
-          setError('Authentication failed. Invalid or expired token.');
-          logout();
-          setTimeout(() => router.push('/'), 2000);
+          setError("Authentication failed. Invalid or expired token.");
+          setIsVerified(false);
         }
-      } catch (error) {
-        setError(String(error));
-        logout();
-        setTimeout(() => router.push('/'), 2000);
+      } catch (err) {
+        setError("Error verifying authentication. Please log in again.");
+        setIsVerified(false);
       }
     };
 
     verifyToken();
-  }, [token, router, setUser, logout]);
+  }, [token, setUser]);
 
-  if (error) {
+  // When verification fails, logout & redirect
+  useEffect(() => {
+    if (isVerified === false) {
+      logout();
+      const timer = setTimeout(() => router.push("/"), 1500);
+      return () => clearTimeout(timer);
+    }
+  }, [isVerified, logout, router]);
+
+  // Loader while checking
+  if (isVerified === null) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
+
+  // Error state
+  if (isVerified === false && error) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="max-w-md mx-auto bg-white rounded-lg shadow-md p-8 text-center">
@@ -70,13 +79,6 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
     );
   }
 
-  if (!isVerified) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-      </div>
-    );
-  }
-
+  // Verified successfully
   return <>{children}</>;
 }
