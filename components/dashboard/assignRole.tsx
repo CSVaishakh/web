@@ -39,13 +39,12 @@ export default function AssignRoleTable({ users = [] }: AssignRoleTableProps) {
 		if (!newRole) return
 		setRowBusy((b) => ({ ...b, [user.userid]: true }))
 		try {
-			await axios.patch(
+			await axios.put(
 				`http://localhost:5005/admin?userId=${user.userid}&role=${newRole}`,
 				{},
 				{ headers: { Authorization: `Bearer ${token}` } }
 			)
 	} catch (e: unknown) {
-			// Keep it simple – log the error
 			console.error("Failed to update role", e)
 	} finally {
 			setRowBusy((b) => ({ ...b, [user.userid]: false }))
