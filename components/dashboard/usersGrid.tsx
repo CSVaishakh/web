@@ -8,13 +8,17 @@ interface UsersGridProps {
 	users: Profile[]
 	showRole?: boolean
 	className?: string
+	showEditRole?: boolean
+	onEditRole?: (user: Profile) => void
 }
 
 export default function UsersGrid({ 
 	title, 
 	users, 
 	showRole = true, 
-	className = "" 
+	className = "",
+	showEditRole = false,
+	onEditRole
 }: UsersGridProps) {
 	return (
 		<div className={`w-full ${className}`}>
@@ -34,6 +38,9 @@ export default function UsersGrid({
 							<th className="px-6 py-3 font-medium">Email</th>
 							{showRole && (
 								<th className="px-6 py-3 font-medium">Role</th>
+							)}
+							{showEditRole && (
+								<th className="px-6 py-3 font-medium">Actions</th>
 							)}
 						</tr>
 					</thead>
@@ -58,13 +65,36 @@ export default function UsersGrid({
 										</span>
 									</td>
 								)}
+								{showEditRole && (
+									<td className="px-6 py-4">
+										<button
+											onClick={() => onEditRole?.(user)}
+											className="inline-flex items-center px-3 py-1 text-xs font-medium text-blue-600 bg-blue-50 border border-blue-200 rounded-md hover:bg-blue-100 hover:border-blue-300 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
+										>
+											<svg 
+												className="w-3 h-3 mr-1" 
+												fill="none" 
+												stroke="currentColor" 
+												viewBox="0 0 24 24"
+											>
+												<path 
+													strokeLinecap="round" 
+													strokeLinejoin="round" 
+													strokeWidth={2} 
+													d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" 
+												/>
+											</svg>
+											Edit Role
+										</button>
+									</td>
+								)}
 							</tr>
 						))}
 						{users.length === 0 && (
 							<tr>
 								<td 
 									className="px-6 py-8 text-center text-gray-500" 
-									colSpan={showRole ? 4 : 3}
+									colSpan={showRole && showEditRole ? 5 : showRole || showEditRole ? 4 : 3}
 								>
 									<div className="flex flex-col items-center">
 										<svg 
